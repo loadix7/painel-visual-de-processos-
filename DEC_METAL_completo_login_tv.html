@@ -177,7 +177,7 @@
   <!-- ===== TELA LOGIN ===== -->
   <div class="screen active" id="scr-login">
     <div style="background:var(--panel);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;justify-content:space-between">
-      <div class="logo"><div class="logo-icon">DM</div><div class="logo-name">DEC <span>METAL</span></div></div>
+      <div class="logo"><div class="logo-icon">DM</div><div class="logo-name">DASH <span>VISUAL</span></div></div>
       <div style="display:flex;gap:8px">
         <button class="btn btn-gr" onclick="irParaTV()" style="font-size:10px"><i class="ti ti-tv" style="font-size:13px;vertical-align:-2px" aria-hidden="true"></i> Ver Painel TV</button>
       </div>
@@ -186,7 +186,7 @@
       <div class="login-box">
         <div class="login-logo">
           <div class="login-logo-icon">DM</div>
-          <div class="login-title">DEC <span>METAL</span></div>
+          <div class="login-title">PAINEL <span>VISUAL</span></div>
           <div class="login-sub">Acesso restrito — Painel PCP</div>
         </div>
         <div class="login-field">
@@ -207,7 +207,7 @@
   <!-- ===== TELA PCP ===== -->
   <div class="screen" id="scr-pcp">
     <div class="hdr">
-      <div class="logo"><div class="logo-icon">DM</div><div class="logo-name">DEC <span>METAL</span></div></div>
+      <div class="logo"><div class="logo-icon">PCP</div><div class="logo-name">PAINEL <span>VISUAL</span></div></div>
       <div class="hdr-r">
         <button class="btn btn-gr" onclick="irParaTV()" style="font-size:10px"><i class="ti ti-tv" style="font-size:12px;vertical-align:-2px" aria-hidden="true"></i> Painel TV</button>
         <div class="clock" id="clk">--:--:--</div>
@@ -315,7 +315,7 @@
     <div class="tv-screen">
       <div class="tv-hdr">
         <div style="display:flex;align-items:center;gap:12px">
-          <div class="tv-logo">DEC <span>METAL</span></div>
+          <div class="tv-logo">PAINEL <span>VISUAL</span></div>
           <div class="tv-live"><div class="pulse" style="width:9px;height:9px"></div>ao vivo</div>
         </div>
         <div class="tv-clock" id="tv-clk">--:--:--</div>
@@ -469,8 +469,8 @@ function renderQRGrid(){
     card.innerHTML=`<div style="text-align:center;width:100%"><div style="font-family:monospace;font-size:13px;font-weight:500;color:var(--accent2)">${item.op}</div><div style="font-size:11px;margin-top:2px;color:${cor}">${item.setor}</div><div style="font-size:11px;color:var(--text)">${item.proc}</div></div><div style="display:flex;gap:10px;align-items:flex-start"><div style="text-align:center"><div style="font-size:10px;color:var(--green);font-weight:600;margin-bottom:4px;text-transform:uppercase">▶ Início</div><div id="${ii}" class="qr-canvas"></div></div><div style="text-align:center"><div style="font-size:10px;color:var(--red);font-weight:600;margin-bottom:4px;text-transform:uppercase">■ Fim</div><div id="${fi}" class="qr-canvas"></div></div></div><div style="display:flex;gap:5px;width:100%"><button class="btn btn-g btn-dl" style="flex:1;font-size:10px" onclick="dlQR('${ii}','${item.op}-INICIO')"><i class="ti ti-download" style="font-size:11px;vertical-align:-1px" aria-hidden="true"></i> Início</button><button class="btn btn-r btn-dl" style="flex:1;font-size:10px" onclick="dlQR('${fi}','${item.op}-FIM')"><i class="ti ti-download" style="font-size:11px;vertical-align:-1px" aria-hidden="true"></i> Fim</button></div>`;
     grid.appendChild(card);
     setTimeout(()=>{
-      new QRCode(document.getElementById(ii),{text:`DECMETAL|${item.op}|${item.setor}|${item.proc}|INICIO`,width:95,height:95,colorDark:'#0a0e1a',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
-      new QRCode(document.getElementById(fi),{text:`DECMETAL|${item.op}|${item.setor}|${item.proc}|FIM`,width:95,height:95,colorDark:'#7f1d1d',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+      new QRCode(document.getElementById(ii),{text:`PAINELVISUAL|${item.op}|${item.setor}|${item.proc}|INICIO`,width:95,height:95,colorDark:'#0a0e1a',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+      new QRCode(document.getElementById(fi),{text:`PAINELVISUAL|${item.op}|${item.setor}|${item.proc}|FIM`,width:95,height:95,colorDark:'#7f1d1d',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
     },120);
   });
 }
