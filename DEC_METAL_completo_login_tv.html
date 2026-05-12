@@ -1,0 +1,495 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0e1a;--panel:#0f1528;--card:#141c35;--border:rgba(60,120,255,0.18);
+  --accent:#2563eb;--accent2:#06b6d4;--green:#10b981;--amber:#f59e0b;
+  --red:#ef4444;--text:#e2e8f0;--muted:#64748b;--dim:#1e2d52;
+  --orange:#f97316;--purple:#8b5cf6;
+}
+*{font-family:'Barlow',system-ui,sans-serif;color:var(--text)}
+.root{background:var(--bg);border-radius:12px;overflow:hidden;min-height:800px;display:flex;flex-direction:column;position:relative}
+
+.screen{width:100%;display:none;flex-direction:column;flex:1}
+.screen.active{display:flex}
+
+/* LOGIN */
+.login-wrap{flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:20px}
+.login-box{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:32px 28px;width:320px;display:flex;flex-direction:column;gap:18px}
+.login-logo{text-align:center}
+.login-logo-icon{width:52px;height:52px;background:#1d4ed8;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;margin:0 auto 10px}
+.login-title{font-family:'Barlow Condensed',system-ui,sans-serif;font-size:24px;font-weight:700;letter-spacing:2px;color:#fff;text-align:center}
+.login-title span{color:var(--accent2)}
+.login-sub{font-size:11px;color:var(--muted);text-align:center;margin-top:2px}
+.login-field{display:flex;flex-direction:column;gap:5px}
+.login-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.login-input{background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:13px;padding:9px 12px;border-radius:8px;outline:none;width:100%;transition:.15s}
+.login-input:focus{border-color:rgba(37,99,235,.6)}
+.login-btn{background:#1d4ed8;border:none;color:#fff;font-size:13px;font-weight:600;padding:10px;border-radius:8px;cursor:pointer;transition:.15s;text-transform:uppercase;letter-spacing:1px}
+.login-btn:hover{background:#2563eb}
+.login-err{font-size:11px;color:var(--red);text-align:center;display:none}
+.login-hint{font-size:10px;color:var(--muted);text-align:center;opacity:.6}
+
+/* HEADER COMPARTILHADO */
+.hdr{background:var(--panel);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:32px;height:32px;background:#1d4ed8;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+.logo-name{font-family:'Barlow Condensed',system-ui,sans-serif;font-size:19px;font-weight:700;letter-spacing:2px;color:#fff}
+.logo-name span{color:var(--accent2)}
+.hdr-r{display:flex;align-items:center;gap:12px}
+.clock{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--accent2)}
+.live{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--green);font-weight:600;text-transform:uppercase;letter-spacing:1px}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pa 1.4s infinite;flex-shrink:0}
+@keyframes pa{0%,100%{opacity:1}50%{opacity:.35}}
+.user-badge{display:flex;align-items:center;gap:6px;background:var(--dim);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--text)}
+.logout-btn{background:transparent;border:1px solid rgba(239,68,68,.3);color:var(--red);font-size:10px;font-weight:600;padding:4px 10px;border-radius:5px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;transition:.15s}
+.logout-btn:hover{background:rgba(239,68,68,.1)}
+
+/* TOP TABS PCP */
+.top-tabs{display:flex;background:var(--panel);border-bottom:1px solid var(--border);flex-shrink:0}
+.top-tab{padding:9px 18px;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;transition:.15s;letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:5px}
+.top-tab.active{color:#fff;border-bottom-color:var(--accent2)}
+.top-tab:hover{color:var(--text)}
+
+/* BODY PCP */
+.pcp-body{display:flex;flex:1;overflow:hidden}
+.sidebar{width:155px;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:8px 0;flex-shrink:0}
+.sl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;padding:5px 14px 3px}
+.nb{display:flex;align-items:center;gap:7px;padding:7px 14px;cursor:pointer;border:none;background:transparent;color:var(--muted);font-family:inherit;font-size:12px;font-weight:500;text-align:left;width:100%;border-left:2px solid transparent;transition:.15s}
+.nb:hover{background:rgba(37,99,235,.08);color:var(--text)}
+.nb.active{background:rgba(37,99,235,.15);color:#fff;border-left-color:var(--accent2)}
+.nd{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.main{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.hidden{display:none!important}
+
+/* CARDS */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.mc{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:11px 13px}
+.ml{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.mv{font-family:'Barlow Condensed',system-ui,sans-serif;font-size:24px;font-weight:700;color:#fff;line-height:1}
+.ms{font-size:10px;color:var(--muted);margin-top:2px}
+.mv.g{color:var(--green)}.mv.b{color:var(--accent2)}.mv.a{color:var(--amber)}.mv.r{color:var(--red)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:13px;position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--sc)}
+.sh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.sn{font-family:'Barlow Condensed',system-ui,sans-serif;font-size:13px;font-weight:700;color:#fff;text-transform:uppercase}
+.badge{font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;text-transform:uppercase}
+.ba{background:rgba(16,185,129,.15);color:var(--green)}
+.bw{background:rgba(245,158,11,.15);color:var(--amber)}
+.bi{background:rgba(100,116,139,.12);color:var(--muted)}
+.br{background:rgba(239,68,68,.15);color:var(--red)}
+.or{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);margin-bottom:3px}
+.on{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent2)}
+.pb{height:3px;background:var(--dim);border-radius:2px;margin-top:8px;overflow:hidden}
+.pf{height:100%;border-radius:2px;background:var(--sc);transition:width 1.5s ease}
+.sf{display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--muted)}
+.feed-panel{background:var(--card);border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.fh{background:var(--panel);padding:9px 13px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.ft{font-size:11px;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:6px}
+.fl{max-height:160px;overflow-y:auto;padding:3px 0}
+.fi{display:flex;align-items:flex-start;gap:9px;padding:7px 13px;border-bottom:1px solid rgba(60,120,255,.06);animation:si .3s ease}
+@keyframes si{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.ftime{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);flex-shrink:0;min-width:50px;margin-top:1px}
+.fd{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.ftx{font-size:12px;line-height:1.4}
+.ftx strong{color:var(--accent2);font-weight:600}
+
+/* RESET */
+.reset-section{display:flex;flex-direction:column;gap:11px}
+.reset-toolbar{background:var(--card);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:15px}
+.reset-title{font-size:13px;font-weight:600;color:var(--red);margin-bottom:3px;display:flex;align-items:center;gap:7px}
+.reset-sub{font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.5}
+.reset-form{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.rst-input{background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;padding:6px 9px;border-radius:6px;outline:none}
+.rst-input:focus{border-color:rgba(239,68,68,.5)}
+.reset-table-wrap{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.rst-hdr{background:var(--panel);padding:9px 13px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.reset-row{display:flex;align-items:center;gap:8px;padding:8px 13px;border-bottom:1px solid rgba(60,120,255,.06);font-size:12px;animation:si .3s ease}
+.rr-op{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent2);min-width:60px}
+
+/* QR */
+.qr-toolbar{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px 15px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.qr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.qr-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px;display:flex;flex-direction:column;align-items:center;gap:9px}
+.qr-canvas{border-radius:5px;background:#fff}
+.sel{background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;padding:5px 8px;border-radius:6px;outline:none}
+.sel option{background:#0f1528}
+.inp{background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;padding:5px 8px;border-radius:6px;outline:none}
+.btn{font-family:inherit;font-size:11px;font-weight:600;padding:6px 11px;border-radius:6px;cursor:pointer;transition:.15s;text-transform:uppercase;letter-spacing:.4px;border:1px solid}
+.btn-b{background:rgba(37,99,235,.2);border-color:rgba(37,99,235,.5);color:var(--accent2)}.btn-b:hover{background:rgba(37,99,235,.35)}
+.btn-r{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.4);color:var(--red)}.btn-r:hover{background:rgba(239,68,68,.28)}
+.btn-g{background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.4);color:var(--green)}.btn-g:hover{background:rgba(16,185,129,.28)}
+.btn-gr{background:rgba(100,116,139,.12);border-color:rgba(100,116,139,.3);color:var(--muted)}.btn-gr:hover{background:rgba(100,116,139,.22)}
+
+/* MODAL */
+.modal-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:100;border-radius:12px}
+.modal{background:var(--panel);border:1px solid rgba(239,68,68,.4);border-radius:12px;padding:22px;max-width:330px;width:90%}
+.modal-title{font-size:14px;font-weight:600;color:var(--red);margin-bottom:7px}
+.modal-body{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:16px}
+.modal-op{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px 11px;margin:8px 0;text-align:center}
+.modal-btns{display:flex;gap:7px;justify-content:flex-end}
+.toast{position:absolute;bottom:16px;right:16px;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:9px 14px;font-size:12px;display:flex;align-items:center;gap:7px;z-index:200;animation:si .3s ease;border-left:3px solid var(--green)}
+.toast.err{border-left-color:var(--red)}
+
+/* PAINEL TV */
+.tv-screen{background:#060a14;flex:1;display:flex;flex-direction:column;padding:0}
+.tv-hdr{background:#0a0f1f;border-bottom:1px solid rgba(6,182,212,.2);padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
+.tv-logo{font-family:'Barlow Condensed',system-ui,sans-serif;font-size:26px;font-weight:700;letter-spacing:3px;color:#fff}
+.tv-logo span{color:#06b6d4}
+.tv-clock{font-family:'IBM Plex Mono',monospace;font-size:22px;color:#06b6d4;letter-spacing:2px}
+.tv-live{display:flex;align-items:center;gap:8px;font-size:13px;color:#10b981;font-weight:600;text-transform:uppercase;letter-spacing:2px}
+.tv-body{flex:1;display:grid;grid-template-columns:1fr 320px;gap:0;overflow:hidden}
+.tv-setores{padding:18px;display:flex;flex-direction:column;gap:10px}
+.tv-sec-title{font-size:11px;color:#06b6d4;text-transform:uppercase;letter-spacing:3px;font-weight:600;margin-bottom:4px}
+.tv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;flex:1}
+.tv-card{background:#0e1629;border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:14px;position:relative;overflow:hidden;transition:border-color .4s}
+.tv-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--tc)}
+.tv-card.tv-active{border-color:rgba(255,255,255,.15)}
+.tv-cn{font-family:'Barlow Condensed',system-ui,sans-serif;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#fff;margin-bottom:6px}
+.tv-op{font-family:'IBM Plex Mono',monospace;font-size:12px;margin-bottom:4px}
+.tv-proc{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:8px}
+.tv-pb{height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;margin-bottom:5px}
+.tv-pf{height:100%;border-radius:2px;background:var(--tc);transition:width 2s ease}
+.tv-foot{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.35)}
+.tv-badge{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:inline-block}
+.tv-ativo{background:rgba(16,185,129,.18);color:#10b981}
+.tv-aguard{background:rgba(245,158,11,.15);color:#f59e0b}
+.tv-livre{background:rgba(100,116,139,.12);color:#64748b}
+.tv-sidebar{background:#0a0f1f;border-left:1px solid rgba(6,182,212,.15);padding:16px;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+.tv-feed-title{font-size:11px;color:#06b6d4;text-transform:uppercase;letter-spacing:2px;font-weight:600}
+.tv-feed-list{flex:1;overflow:hidden;display:flex;flex-direction:column;gap:1px}
+.tv-fi{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);animation:si .4s ease}
+.tv-fi-time{font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,.3);margin-bottom:2px}
+.tv-fi-text{font-size:12px;color:rgba(255,255,255,.75);line-height:1.35}
+.tv-fi-text strong{font-weight:600}
+.tv-metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.tv-mc{background:#0e1629;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px 12px;text-align:center}
+.tv-ml{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.tv-mv{font-family:'Barlow Condensed',system-ui,sans-serif;font-size:28px;font-weight:700;line-height:1}
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;700&display=swap" rel="stylesheet">
+
+<div class="root" id="root">
+
+  <!-- ===== TELA LOGIN ===== -->
+  <div class="screen active" id="scr-login">
+    <div style="background:var(--panel);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;justify-content:space-between">
+      <div class="logo"><div class="logo-icon">DM</div><div class="logo-name">DEC <span>METAL</span></div></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-gr" onclick="irParaTV()" style="font-size:10px"><i class="ti ti-tv" style="font-size:13px;vertical-align:-2px" aria-hidden="true"></i> Ver Painel TV</button>
+      </div>
+    </div>
+    <div class="login-wrap">
+      <div class="login-box">
+        <div class="login-logo">
+          <div class="login-logo-icon">DM</div>
+          <div class="login-title">DEC <span>METAL</span></div>
+          <div class="login-sub">Acesso restrito — Painel PCP</div>
+        </div>
+        <div class="login-field">
+          <div class="login-label">Usuário</div>
+          <input class="login-input" id="l-user" placeholder="seu.usuario" type="text">
+        </div>
+        <div class="login-field">
+          <div class="login-label">Senha</div>
+          <input class="login-input" id="l-pass" placeholder="••••••••" type="password" onkeydown="if(event.key==='Enter')fazerLogin()">
+        </div>
+        <div class="login-err" id="l-err">Usuário ou senha incorretos.</div>
+        <button class="login-btn" onclick="fazerLogin()">Entrar no PCP</button>
+        <div class="login-hint">Usuário demo: pcp / Senha: 1234</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TELA PCP ===== -->
+  <div class="screen" id="scr-pcp">
+    <div class="hdr">
+      <div class="logo"><div class="logo-icon">DM</div><div class="logo-name">DEC <span>METAL</span></div></div>
+      <div class="hdr-r">
+        <button class="btn btn-gr" onclick="irParaTV()" style="font-size:10px"><i class="ti ti-tv" style="font-size:12px;vertical-align:-2px" aria-hidden="true"></i> Painel TV</button>
+        <div class="clock" id="clk">--:--:--</div>
+        <div class="live"><div class="pulse"></div>ao vivo</div>
+        <div class="user-badge"><i class="ti ti-user" style="font-size:13px" aria-hidden="true"></i><span id="usr-name">PCP</span></div>
+        <button class="logout-btn" onclick="fazerLogout()"><i class="ti ti-logout" style="font-size:12px;vertical-align:-2px" aria-hidden="true"></i> Sair</button>
+      </div>
+    </div>
+    <div class="top-tabs">
+      <button class="top-tab active" onclick="switchTop('dash',this)"><i class="ti ti-layout-dashboard" style="font-size:14px" aria-hidden="true"></i>Dashboard</button>
+      <button class="top-tab" onclick="switchTop('reset',this)"><i class="ti ti-refresh-alert" style="font-size:14px" aria-hidden="true"></i>Reset de OPs</button>
+      <button class="top-tab" onclick="switchTop('qr',this)"><i class="ti ti-qrcode" style="font-size:14px" aria-hidden="true"></i>Gestão QR Codes</button>
+    </div>
+    <div class="pcp-body">
+      <div class="sidebar" id="sidebar">
+        <div class="sl">Visão geral</div>
+        <button class="nb active" onclick="showSetor('geral',this)"><span class="nd" style="background:#06b6d4"></span>Dashboard</button>
+        <div class="sl" style="margin-top:6px">Setores</div>
+        <button class="nb" onclick="showSetor('entrada',this)"><span class="nd" style="background:#10b981"></span>Entrada Mat.</button>
+        <button class="nb" onclick="showSetor('laser',this)"><span class="nd" style="background:#06b6d4"></span>Laser</button>
+        <button class="nb" onclick="showSetor('dobra',this)"><span class="nd" style="background:#8b5cf6"></span>Dobra</button>
+        <button class="nb" onclick="showSetor('caldeiraria',this)"><span class="nd" style="background:#f59e0b"></span>Caldeiraria</button>
+        <button class="nb" onclick="showSetor('usinagem',this)"><span class="nd" style="background:#ef4444"></span>Usinagem</button>
+        <button class="nb" onclick="showSetor('acabamento',this)"><span class="nd" style="background:#f97316"></span>Acabamento</button>
+        <button class="nb" onclick="showSetor('expedicao',this)"><span class="nd" style="background:#64748b"></span>Expedição</button>
+      </div>
+      <div class="main" id="main-pcp">
+
+        <div id="s-geral">
+          <div class="metrics">
+            <div class="mc"><div class="ml">OPs Abertas</div><div class="mv b" id="m-ops">12</div><div class="ms">hoje</div></div>
+            <div class="mc"><div class="ml">Setores Ativos</div><div class="mv g" id="m-set">5</div><div class="ms">de 7</div></div>
+            <div class="mc"><div class="ml">Scans hoje</div><div class="mv" id="m-scans">34</div><div class="ms">último turno</div></div>
+            <div class="mc"><div class="ml">Resets hoje</div><div class="mv r" id="m-resets">2</div><div class="ms">correções</div></div>
+          </div>
+          <div class="grid3">
+            <div class="sc" style="--sc:#10b981"><div class="sh"><div class="sn">Entrada Mat.</div><div class="badge ba">Ativo</div></div><div class="or"><span class="on">OP-081</span>Em andamento</div><div class="pb"><div class="pf" style="width:65%"></div></div><div class="sf"><span>2 ops</span><span>65%</span></div></div>
+            <div class="sc" style="--sc:#06b6d4"><div class="sh"><div class="sn">Laser</div><div class="badge ba">Ativo</div></div><div class="or"><span class="on">OP-079</span>Corte em curso</div><div class="pb"><div class="pf" style="width:80%"></div></div><div class="sf"><span>2 ops</span><span>80%</span></div></div>
+            <div class="sc" style="--sc:#8b5cf6"><div class="sh"><div class="sn">Dobra</div><div class="badge bw">Aguardando</div></div><div class="or"><span class="on">OP-077</span>Aguard. Laser</div><div class="pb"><div class="pf" style="width:20%"></div></div><div class="sf"><span>1 op</span><span>20%</span></div></div>
+            <div class="sc" style="--sc:#f59e0b"><div class="sh"><div class="sn">Caldeiraria</div><div class="badge ba">Ativo</div></div><div class="or"><span class="on">OP-075</span>Solda MIG</div><div class="pb"><div class="pf" style="width:55%"></div></div><div class="sf"><span>2 ops</span><span>55%</span></div></div>
+            <div class="sc" style="--sc:#ef4444"><div class="sh"><div class="sn">Usinagem</div><div class="badge ba">Ativo</div></div><div class="or"><span class="on">OP-071</span>Torneamento</div><div class="pb"><div class="pf" style="width:90%"></div></div><div class="sf"><span>1 op</span><span>90%</span></div></div>
+            <div class="sc" style="--sc:#f97316"><div class="sh"><div class="sn">Acabamento</div><div class="badge bi">Livre</div></div><div class="or" style="color:var(--muted)">Sem OPs</div><div class="pb"><div class="pf" style="width:0%"></div></div><div class="sf"><span>—</span><span>—</span></div></div>
+          </div>
+          <div class="feed-panel">
+            <div class="fh"><div class="ft"><div class="pulse" style="background:var(--accent2)"></div>Feed tempo real</div><div style="font-size:10px;color:var(--muted)" id="fcnt">4 eventos</div></div>
+            <div class="fl" id="feed">
+              <div class="fi"><span class="ftime">08:14</span><div class="fd" style="background:#06b6d4"></div><div class="ftx"><strong>Laser</strong> — <strong>OP-079</strong> iniciada — corte a laser</div></div>
+              <div class="fi"><span class="ftime">08:10</span><div class="fd" style="background:#10b981"></div><div class="ftx"><strong>Entrada Mat.</strong> — <strong>OP-082</strong> iniciada</div></div>
+              <div class="fi"><span class="ftime">08:02</span><div class="fd" style="background:#f59e0b"></div><div class="ftx"><strong>Caldeiraria</strong> — <strong>OP-075</strong> iniciada — solda MIG</div></div>
+              <div class="fi"><span class="ftime">07:55</span><div class="fd" style="background:#ef4444"></div><div class="ftx"><strong>Usinagem</strong> — <strong>OP-071</strong> iniciada — torneamento</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="s-reset" class="hidden reset-section">
+          <div class="reset-toolbar">
+            <div class="reset-title"><i class="ti ti-alert-triangle" style="font-size:17px" aria-hidden="true"></i>Reset de confirmação de serviço</div>
+            <div class="reset-sub">Use apenas quando operador escanear QR incorreto. O reset é registrado com responsável e horário e <strong style="color:var(--amber)">atualiza o painel da TV instantaneamente.</strong></div>
+            <div class="reset-form">
+              <select class="rst-input" id="rst-setor"><option value="">Setor...</option><option>Laser</option><option>Dobra</option><option>Caldeiraria</option><option>Usinagem</option><option>Acabamento</option><option>Entrada de Materiais</option><option>Expedição</option></select>
+              <input class="rst-input" id="rst-op" placeholder="Nº OP (ex: OP-079)" style="width:145px">
+              <input class="rst-input" id="rst-resp" placeholder="Responsável" style="width:145px">
+              <button class="btn btn-r" onclick="solicitarReset()"><i class="ti ti-rotate-clockwise-2" style="font-size:12px;vertical-align:-2px" aria-hidden="true"></i> Solicitar reset</button>
+            </div>
+          </div>
+          <div class="reset-table-wrap">
+            <div class="rst-hdr"><div class="ft"><i class="ti ti-history" style="font-size:14px" aria-hidden="true"></i>Histórico de resets</div><div style="font-size:10px;color:var(--muted)" id="rst-count">2 resets hoje</div></div>
+            <div id="rst-list">
+              <div class="reset-row"><span class="rr-op">OP-076</span><span style="flex:1;color:var(--text)">Caldeiraria</span><span style="flex:1.5;color:var(--muted);font-size:11px">Scan duplicado</span><span style="color:var(--red);font-size:10px;font-weight:600;text-transform:uppercase">Anulado</span><span style="font-family:monospace;font-size:10px;color:var(--muted);margin-left:8px">08:12</span><span style="font-size:10px;color:var(--muted);margin-left:8px">Adriano</span></div>
+              <div class="reset-row"><span class="rr-op">OP-063</span><span style="flex:1;color:var(--text)">Dobra</span><span style="flex:1.5;color:var(--muted);font-size:11px">QR errado</span><span style="color:var(--red);font-size:10px;font-weight:600;text-transform:uppercase">Anulado</span><span style="font-family:monospace;font-size:10px;color:var(--muted);margin-left:8px">06:30</span><span style="font-size:10px;color:var(--muted);margin-left:8px">Marcos</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="s-qr" class="hidden">
+          <div class="qr-toolbar">
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px">Criar OP — gera QR de início e fim</div>
+              <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
+                <input class="inp" id="new-op" placeholder="Nº OP (ex: OP-090)" style="width:130px">
+                <select class="sel" id="new-setor"><option>Laser</option><option>Dobra</option><option>Caldeiraria</option><option>Usinagem</option><option>Acabamento</option><option>Entrada de Materiais</option><option>Expedição</option></select>
+                <select class="sel" id="new-proc"><option>Corte a laser</option><option>Dobramento de chapa</option><option>Solda MIG</option><option>Montagem estrutural</option><option>Torneamento CNC</option><option>Jateamento</option><option>Pintura eletrostática</option><option>Inspeção de entrada</option><option>Embalagem final</option></select>
+                <button class="btn btn-b" onclick="addOP()"><i class="ti ti-plus" style="font-size:12px;vertical-align:-2px" aria-hidden="true"></i> Gerar QR</button>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px;margin-bottom:5px">OPs com QR gerados — início (verde) e fim (vermelho)</div>
+          <div class="qr-grid" id="qr-grid"></div>
+        </div>
+
+        <div id="s-entrada" class="hidden"><div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#10b981;margin-bottom:8px">Entrada de Materiais</div><div style="font-size:12px;color:var(--muted)">OP-082 em andamento desde 08:10. Scan de início registrado. Aguardando finalização.</div></div></div>
+        <div id="s-laser" class="hidden"><div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#06b6d4;margin-bottom:8px">Laser</div><div style="font-size:12px;color:var(--muted)">OP-079 em andamento desde 08:14. Corte a laser em execução. Aguardando scan de finalização.</div></div></div>
+        <div id="s-dobra" class="hidden"><div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#8b5cf6;margin-bottom:8px">Dobra</div><div style="font-size:12px;color:var(--muted)">Aguardando peças do Laser. Nenhum scan registrado.</div></div></div>
+        <div id="s-caldeiraria" class="hidden"><div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#f59e0b;margin-bottom:8px">Caldeiraria</div><div style="font-size:12px;color:var(--muted)">OP-075 em andamento desde 08:02. Solda MIG em execução.</div></div></div>
+        <div id="s-usinagem" class="hidden"><div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#ef4444;margin-bottom:8px">Usinagem</div><div style="font-size:12px;color:var(--muted)">OP-071 em andamento desde 07:55. Torneamento CNC — 90% concluído.</div></div></div>
+        <div id="s-acabamento" class="hidden"><div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#f97316;margin-bottom:8px">Acabamento</div><div style="font-size:12px;color:var(--muted)">Nenhuma OP ativa no momento.</div></div></div>
+        <div id="s-expedicao" class="hidden"><div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#64748b;margin-bottom:8px">Expedição</div><div style="font-size:12px;color:var(--muted)">3 OPs prontas para envio. OP-068, OP-069 embaladas. OP-070 em embalagem.</div></div></div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAINEL TV ===== -->
+  <div class="screen" id="scr-tv">
+    <div class="tv-screen">
+      <div class="tv-hdr">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="tv-logo">DEC <span>METAL</span></div>
+          <div class="tv-live"><div class="pulse" style="width:9px;height:9px"></div>ao vivo</div>
+        </div>
+        <div class="tv-clock" id="tv-clk">--:--:--</div>
+        <button class="btn btn-gr" onclick="voltarLogin()" style="font-size:10px"><i class="ti ti-lock" style="font-size:12px;vertical-align:-2px" aria-hidden="true"></i> Painel PCP</button>
+      </div>
+      <div class="tv-body">
+        <div class="tv-setores">
+          <div class="tv-sec-title">Monitoramento de setores — tempo real</div>
+          <div class="tv-grid" id="tv-grid">
+            <div class="tv-card tv-active" style="--tc:#10b981"><div class="tv-badge tv-ativo">Ativo</div><div class="tv-cn">Entrada Mat.</div><div class="tv-op" style="color:#10b981">OP-081</div><div class="tv-proc">Inspeção de entrada</div><div class="tv-pb"><div class="tv-pf" style="width:65%"></div></div><div class="tv-foot"><span>07:42 início</span><span>65%</span></div></div>
+            <div class="tv-card tv-active" style="--tc:#06b6d4"><div class="tv-badge tv-ativo">Ativo</div><div class="tv-cn">Laser</div><div class="tv-op" style="color:#06b6d4">OP-079</div><div class="tv-proc">Corte a laser</div><div class="tv-pb"><div class="tv-pf" style="width:80%"></div></div><div class="tv-foot"><span>08:14 início</span><span>80%</span></div></div>
+            <div class="tv-card" style="--tc:#8b5cf6"><div class="tv-badge tv-aguard">Aguardando</div><div class="tv-cn">Dobra</div><div class="tv-op" style="color:#8b5cf6">OP-077</div><div class="tv-proc">Aguard. peças do Laser</div><div class="tv-pb"><div class="tv-pf" style="width:20%"></div></div><div class="tv-foot"><span>—</span><span>20%</span></div></div>
+            <div class="tv-card tv-active" style="--tc:#f59e0b"><div class="tv-badge tv-ativo">Ativo</div><div class="tv-cn">Caldeiraria</div><div class="tv-op" style="color:#f59e0b">OP-075</div><div class="tv-proc">Solda MIG</div><div class="tv-pb"><div class="tv-pf" style="width:55%"></div></div><div class="tv-foot"><span>08:02 início</span><span>55%</span></div></div>
+            <div class="tv-card tv-active" style="--tc:#ef4444"><div class="tv-badge tv-ativo">Ativo</div><div class="tv-cn">Usinagem</div><div class="tv-op" style="color:#ef4444">OP-071</div><div class="tv-proc">Torneamento CNC</div><div class="tv-pb"><div class="tv-pf" style="width:90%"></div></div><div class="tv-foot"><span>07:55 início</span><span>90%</span></div></div>
+            <div class="tv-card" style="--tc:#f97316"><div class="tv-badge tv-livre">Livre</div><div class="tv-cn">Acabamento</div><div class="tv-op" style="color:rgba(255,255,255,.2)">—</div><div class="tv-proc" style="color:rgba(255,255,255,.25)">Aguardando OP</div><div class="tv-pb"><div class="tv-pf" style="width:0%"></div></div><div class="tv-foot"><span>—</span><span>—</span></div></div>
+            <div class="tv-card" style="--tc:#64748b;grid-column:span 3"><div class="tv-badge tv-aguard">Fila</div><div class="tv-cn">Expedição</div><div class="tv-op" style="color:#64748b">OP-068 / OP-069 / OP-070</div><div class="tv-proc">3 ordens prontas para envio — OP-070 em embalagem</div><div class="tv-pb"><div class="tv-pf" style="width:85%"></div></div><div class="tv-foot"><span>—</span><span>85%</span></div></div>
+          </div>
+        </div>
+        <div class="tv-sidebar">
+          <div class="tv-metrics">
+            <div class="tv-mc"><div class="tv-ml">OPs abertas</div><div class="tv-mv" style="color:#06b6d4" id="tv-m-ops">12</div></div>
+            <div class="tv-mc"><div class="tv-ml">Setores ativos</div><div class="tv-mv" style="color:#10b981" id="tv-m-set">5</div></div>
+            <div class="tv-mc"><div class="tv-ml">Scans hoje</div><div class="tv-mv" style="color:#e2e8f0" id="tv-m-scans">34</div></div>
+            <div class="tv-mc"><div class="tv-ml">Concluídas</div><div class="tv-mv" style="color:#10b981" id="tv-m-done">7</div></div>
+          </div>
+          <div class="tv-feed-title">Atividade recente</div>
+          <div class="tv-feed-list" id="tv-feed">
+            <div class="tv-fi"><div class="tv-fi-time">08:14:32</div><div class="tv-fi-text"><strong style="color:#06b6d4">Laser</strong> — OP-079 iniciada</div></div>
+            <div class="tv-fi"><div class="tv-fi-time">08:10:05</div><div class="tv-fi-text"><strong style="color:#10b981">Entrada Mat.</strong> — OP-082 iniciada</div></div>
+            <div class="tv-fi"><div class="tv-fi-time">08:02:47</div><div class="tv-fi-text"><strong style="color:#f59e0b">Caldeiraria</strong> — OP-075 iniciada</div></div>
+            <div class="tv-fi"><div class="tv-fi-time">07:55:18</div><div class="tv-fi-text"><strong style="color:#ef4444">Usinagem</strong> — OP-071 iniciada</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL RESET -->
+  <div class="modal-overlay hidden" id="modal">
+    <div class="modal">
+      <div class="modal-title"><i class="ti ti-alert-triangle" style="font-size:16px;vertical-align:-2px" aria-hidden="true"></i> Confirmar reset de OP</div>
+      <div class="modal-body">Esta ação <strong style="color:var(--red)">anula o registro</strong> e exige novo scan. O evento é salvo no histórico e <strong style="color:var(--amber)">atualiza o painel da TV imediatamente.</strong><div class="modal-op" id="modal-info">—</div></div>
+      <div class="modal-btns">
+        <button class="btn btn-gr" onclick="fecharModal()">Cancelar</button>
+        <button class="btn btn-r" onclick="confirmarReset()"><i class="ti ti-rotate-clockwise-2" style="font-size:12px;vertical-align:-2px" aria-hidden="true"></i> Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const USERS={pcp:'1234',admin:'dec2024'};
+const setorColors={'Laser':'#06b6d4','Dobra':'#8b5cf6','Caldeiraria':'#f59e0b','Usinagem':'#ef4444','Acabamento':'#f97316','Entrada de Materiais':'#10b981','Expedição':'#64748b'};
+let feedCount=4,resetCount=2,pendingResetData=null;
+let opItems=[{op:'OP-079',setor:'Laser',proc:'Corte a laser'},{op:'OP-075',setor:'Caldeiraria',proc:'Solda MIG'},{op:'OP-082',setor:'Entrada de Materiais',proc:'Inspeção de entrada'},{op:'OP-071',setor:'Usinagem',proc:'Torneamento CNC'}];
+
+function pad(n){return String(n).padStart(2,'0')}
+function tick(){const n=new Date(),t=pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds());document.getElementById('clk')&&(document.getElementById('clk').textContent=t);document.getElementById('tv-clk')&&(document.getElementById('tv-clk').textContent=t)}
+tick();setInterval(tick,1000);
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('scr-'+id).classList.add('active')}
+
+function fazerLogin(){
+  const u=document.getElementById('l-user').value.trim();
+  const p=document.getElementById('l-pass').value;
+  const err=document.getElementById('l-err');
+  if(USERS[u]&&USERS[u]===p){err.style.display='none';document.getElementById('usr-name').textContent=u.toUpperCase();showScreen('pcp')}
+  else{err.style.display='block'}
+}
+function fazerLogout(){showScreen('login');document.getElementById('l-user').value='';document.getElementById('l-pass').value=''}
+function irParaTV(){showScreen('tv')}
+function voltarLogin(){showScreen('login')}
+
+function switchTop(tab,btn){
+  document.querySelectorAll('.top-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const sidebar=document.getElementById('sidebar');
+  hideAllS();
+  if(tab==='dash'){sidebar.style.display='';document.getElementById('s-geral').classList.remove('hidden');document.querySelectorAll('.nb').forEach((b,i)=>{b.classList.remove('active');if(i===0)b.classList.add('active')})}
+  else if(tab==='reset'){sidebar.style.display='none';document.getElementById('s-reset').classList.remove('hidden')}
+  else{sidebar.style.display='none';document.getElementById('s-qr').classList.remove('hidden');renderQRGrid()}
+}
+
+function hideAllS(){document.querySelectorAll('[id^="s-"]').forEach(el=>el.classList.add('hidden'))}
+function showSetor(id,btn){hideAllS();document.getElementById('s-'+id).classList.remove('hidden');document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active')}
+
+function addFeed(html,col){
+  feedCount++;
+  const n=new Date(),t=pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds());
+  const f=document.getElementById('feed');
+  const item=document.createElement('div');item.className='fi';
+  item.innerHTML=`<span class="ftime">${t}</span><div class="fd" style="background:${col||'var(--accent2)'}"></div><div class="ftx">${html}</div>`;
+  f.insertBefore(item,f.firstChild);
+  document.getElementById('fcnt').textContent=feedCount+' eventos';
+  addTVFeed(html,col,t);
+}
+
+function addTVFeed(html,col,t){
+  const tf=document.getElementById('tv-feed');
+  const item=document.createElement('div');item.className='tv-fi';
+  const clean=html.replace(/<strong>/g,'<strong>').replace(/<\/strong>/g,'</strong>');
+  item.innerHTML=`<div class="tv-fi-time">${t}</div><div class="tv-fi-text">${clean}</div>`;
+  tf.insertBefore(item,tf.firstChild);
+  if(tf.children.length>8)tf.removeChild(tf.lastChild);
+  document.getElementById('tv-m-ops').textContent=document.getElementById('m-ops').textContent;
+  document.getElementById('tv-m-scans').textContent=document.getElementById('m-scans').textContent;
+}
+
+function showToast(msg,err=false){
+  const old=document.getElementById('toast-el');if(old)old.remove();
+  const t=document.createElement('div');t.id='toast-el';t.className='toast'+(err?' err':'');
+  t.innerHTML=`<i class="ti ti-${err?'x':'check'}" style="font-size:15px" aria-hidden="true"></i>${msg}`;
+  document.getElementById('root').appendChild(t);setTimeout(()=>t.remove(),3000);
+}
+
+function solicitarReset(){
+  const s=document.getElementById('rst-setor').value;
+  const o=document.getElementById('rst-op').value.trim();
+  const r=document.getElementById('rst-resp').value.trim();
+  if(!s||!o||!r){showToast('Preencha todos os campos.',true);return}
+  pendingResetData={setor:s,op:o,resp:r};
+  document.getElementById('modal-info').textContent=`${o} — ${s} — Resp: ${r}`;
+  document.getElementById('modal').classList.remove('hidden');
+}
+function fecharModal(){document.getElementById('modal').classList.add('hidden');pendingResetData=null}
+function confirmarReset(){
+  if(!pendingResetData)return;
+  const{setor,op,resp}=pendingResetData;
+  const n=new Date(),t=pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds());
+  resetCount++;
+  document.getElementById('m-resets').textContent=resetCount;
+  document.getElementById('rst-count').textContent=resetCount+' resets hoje';
+  const list=document.getElementById('rst-list');
+  const row=document.createElement('div');row.className='reset-row';row.style.animation='si .3s ease';
+  row.innerHTML=`<span class="rr-op">${op}</span><span style="flex:1;color:var(--text)">${setor}</span><span style="flex:1.5;color:var(--muted);font-size:11px">Reset via PCP</span><span style="color:var(--red);font-size:10px;font-weight:600;text-transform:uppercase">Anulado</span><span style="font-family:monospace;font-size:10px;color:var(--muted);margin-left:8px">${t}</span><span style="font-size:10px;color:var(--muted);margin-left:8px">${resp}</span>`;
+  list.insertBefore(row,list.firstChild);
+  addFeed(`<strong style="color:var(--red)">[RESET]</strong> ${op} — ${setor} anulada — resp: <strong>${resp}</strong>`,setorColors[setor]||'#64748b');
+  fecharModal();
+  document.getElementById('rst-setor').value='';document.getElementById('rst-op').value='';document.getElementById('rst-resp').value='';
+  showToast(`Reset de ${op} aplicado. Painel TV atualizado.`);
+}
+
+function renderQRGrid(){
+  const grid=document.getElementById('qr-grid');grid.innerHTML='';
+  opItems.forEach(item=>{
+    const ii='qi-'+item.op.replace(/\W/g,'');const fi='qf-'+item.op.replace(/\W/g,'');
+    const cor=setorColors[item.setor]||'#64748b';
+    const card=document.createElement('div');card.className='qr-card';card.style.borderTop=`2px solid ${cor}`;
+    card.innerHTML=`<div style="text-align:center;width:100%"><div style="font-family:monospace;font-size:13px;font-weight:500;color:var(--accent2)">${item.op}</div><div style="font-size:11px;margin-top:2px;color:${cor}">${item.setor}</div><div style="font-size:11px;color:var(--text)">${item.proc}</div></div><div style="display:flex;gap:10px;align-items:flex-start"><div style="text-align:center"><div style="font-size:10px;color:var(--green);font-weight:600;margin-bottom:4px;text-transform:uppercase">▶ Início</div><div id="${ii}" class="qr-canvas"></div></div><div style="text-align:center"><div style="font-size:10px;color:var(--red);font-weight:600;margin-bottom:4px;text-transform:uppercase">■ Fim</div><div id="${fi}" class="qr-canvas"></div></div></div><div style="display:flex;gap:5px;width:100%"><button class="btn btn-g btn-dl" style="flex:1;font-size:10px" onclick="dlQR('${ii}','${item.op}-INICIO')"><i class="ti ti-download" style="font-size:11px;vertical-align:-1px" aria-hidden="true"></i> Início</button><button class="btn btn-r btn-dl" style="flex:1;font-size:10px" onclick="dlQR('${fi}','${item.op}-FIM')"><i class="ti ti-download" style="font-size:11px;vertical-align:-1px" aria-hidden="true"></i> Fim</button></div>`;
+    grid.appendChild(card);
+    setTimeout(()=>{
+      new QRCode(document.getElementById(ii),{text:`DECMETAL|${item.op}|${item.setor}|${item.proc}|INICIO`,width:95,height:95,colorDark:'#0a0e1a',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+      new QRCode(document.getElementById(fi),{text:`DECMETAL|${item.op}|${item.setor}|${item.proc}|FIM`,width:95,height:95,colorDark:'#7f1d1d',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+    },120);
+  });
+}
+
+function addOP(){
+  const op=document.getElementById('new-op').value.trim();
+  const setor=document.getElementById('new-setor').value;
+  const proc=document.getElementById('new-proc').value;
+  if(!op){showToast('Informe o número da OP.',true);return}
+  opItems.unshift({op,setor,proc});
+  addFeed(`<strong>${setor}</strong> — <strong>${op}</strong> criada — ${proc}`,setorColors[setor]);
+  document.getElementById('new-op').value='';
+  renderQRGrid();
+  showToast(`${op} criada — QR Codes gerados.`);
+}
+
+function dlQR(cid,nome){
+  const c=document.getElementById(cid);if(!c)return;
+  const cv=c.querySelector('canvas');if(!cv){showToast('QR ainda carregando.',true);return}
+  const a=document.createElement('a');a.download=nome+'.png';a.href=cv.toDataURL('image/png');a.click();
+}
+</script>
